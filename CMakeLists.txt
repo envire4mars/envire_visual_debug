@@ -8,11 +8,20 @@ find_package(mars)
 mars_defaults()
 define_module_info()
 
+find_package(lib_manager)
+
+setup_qt()
+
+if(USE_QT5)
+    set(ENVIRE_VISUALIZER_PKG envire_visualizer-qt5)
+else()
+    set(ENVIRE_VISUALIZER_PKG envire_visualizer)
+endif()
 
 pkg_check_modules(PKGCONFIG REQUIRED
 			    lib_manager
 				mars_interfaces
-				envire_visualizer
+				${ENVIRE_VISUALIZER_PKG}
 				envire_managers
 				configmaps
 )
@@ -22,10 +31,6 @@ add_definitions(${PKGCONFIG_CFLAGS_OTHER})  #flags excluding the ones with -I
 
 add_subdirectory(src)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-
-find_package(lib_manager)
-
-setup_qt()
 
 target_link_libraries(${PROJECT_NAME}
                       ${PKGCONFIG_LIBRARIES}
